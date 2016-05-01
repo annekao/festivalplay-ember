@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import ENV from "client/config/environment";
 
 export default Ember.Controller.extend({
   isModalOpen: false,
@@ -61,7 +62,7 @@ export default Ember.Controller.extend({
       this.set('step3', false);
       this.set('selectedEvent', '');
       if(this.get('selectedEvent') === '') {
-        $.getJSON('http://localhost:8000/api/v1/seatgeek/events?q='+this.get('search'))
+        $.getJSON(ENV.NODE_API+'api/v1/seatgeek/events?q='+this.get('search'))
           .then(function(response){
             this.set('eventResults', response);
           }.bind(this));
@@ -114,7 +115,7 @@ export default Ember.Controller.extend({
       this.set('progress', 'Searching for artists in Spotify...');
 
       this.get('selectedArtists').forEach(function(artist) {
-        promises.push($.getJSON('http://localhost:8000/api/v1/spotify/search?q='+encodeURIComponent(artist))
+        promises.push($.getJSON(ENV.NODE_API+'api/v1/spotify/search?q='+encodeURIComponent(artist))
           .then(function(response){
             if (response.error) {
               this.get('errorMessages').addObject(response.error);
@@ -125,7 +126,7 @@ export default Ember.Controller.extend({
 
       Promise.all(promises).then(function() {
         this.set('progress', 'Finding the top ' + this.get('range') + ' tracks for each artist...');
-        $.getJSON('http://localhost:8000/api/v1/spotify/artists/top-tracks?tracks='+this.get('range'))
+        $.getJSON(ENV.NODE_API+'api/v1/spotify/artists/top-tracks?tracks='+this.get('range'))
           .then(function(response){
             if (response.error.length > 0) {
               this.get('errorMessages').pushObjects(response.error.toArray());
@@ -133,11 +134,11 @@ export default Ember.Controller.extend({
           }.bind(this))
           .then(function() {
             this.set('progress', 'Creating playlist \''+playlistTitle+'\'...');
-            $.post('http://localhost:8000/api/v1/spotify/users/playlists?title='+encodeURIComponent(playlistTitle)+
+            $.post(ENV.NODE_API+'api/v1/spotify/users/playlists?title='+encodeURIComponent(playlistTitle)+
                           '&event='+encodeURIComponent(event)+'&date='+encodeURIComponent(date)+'&location='+encodeURIComponent(location))
               .then(function(response2){
                 this.set('progress', 'Adding tracks...');
-                $.post('http://localhost:8000/api/v1/spotify/users/playlists/tracks?playlist_id='+response2.playlist_id)
+                $.post(ENV.NODE_API+'api/v1/spotify/users/playlists/tracks?playlist_id='+response2.playlist_id)
                   .then(function(response3) {
                     this.set('progress', 'Added '+response3.tracks_size+' tracks to playlist \''+playlistTitle+'\'');
                     this.set('complete', true);

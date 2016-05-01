@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import ENV from "client/config/environment";
 
 function getHashParams() {
   var hashParams = {};
@@ -19,13 +20,13 @@ export default Ember.Route.extend({
   model() {
     var params = getHashParams();
     if (params.access_token !== undefined) {
-      return $.post('http://localhost:8000/api/v1/spotify/me?access_token='+params.access_token)
+      return $.post(ENV.NODE_API+'api/v1/spotify/me?access_token='+params.access_token)
         .then(function(response){
           setAccessToken(params.access_token);
           return response;
       });
     } else if((new Date()).getTime() < localStorage.getItem('access_token_expires')) {
-      return $.post('http://localhost:8000/api/v1/spotify/me?access_token='+localStorage.getItem('access_token'))
+      return $.post(ENV.NODE_API+'api/v1/spotify/me?access_token='+localStorage.getItem('access_token'))
         .then(function(response){
           return response;
         });

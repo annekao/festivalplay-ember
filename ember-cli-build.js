@@ -5,8 +5,7 @@ var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 module.exports = function(defaults) {
   var app = new EmberApp(defaults, {
     dotEnv: {
-      clientAllowedKeys: ['SPOTIFY_CLIENT_ID', 'SPOTIFY_REDIRECT_URI'],
-      path: './../.env'
+      clientAllowedKeys: ['SPOTIFY_CLIENT_ID', 'SPOTIFY_REDIRECT_URI', 'NODE_API'],
     }
   });
 
