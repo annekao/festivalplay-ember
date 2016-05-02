@@ -1,4 +1,4 @@
-Take a look at the server/API code [here](https://github.com/annekao/itp-405-final-project-node-api).  This is hosted on https://festivalplay-api.herokuapp.com/.
+Take a look at the server/API code [here](https://github.com/annekao/itp-405-final-project-node-api) which is hosted on https://festivalplay-api.herokuapp.com/.
 
 ##Requirements (client-side application driven by an API)
 **Use of Ember for the client-side application**
