@@ -1,11 +1,10 @@
-// Fix for Roboto font path
-$roboto-font-path: '../assets/';
+@import "ember-modal-dialog/ember-modal-structure";
+@import "ember-modal-dialog/ember-modal-appearance";
 
-// Materialize styles
-@import "materialize";
-
-// ember-cli-materialize styles
-@import 'ember-cli-materialize';
+nav {
+  padding-left: 50px;
+  padding-right: 20px;
+}
 
 .circle {
   height: 40px;
@@ -14,10 +13,43 @@ $roboto-font-path: '../assets/';
   margin-left: 10px;
 }
 
-.fixed-floating {
+.btn-floating {
   position: absolute;
   right: 35px;
   bottom: 35px;
+}
+
+.modal {
+  display: block;
+}
+
+.ember-modal-dialog {
+  border-radius: 0px;
+  box-shadow: none;
+  width: 55%;
+  max-height: 70%;
+}
+
+.modal-title {
+  font-size: 35px;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  padding: 15px;
+  height: 80px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.modal-body {
+  margin-top: 70px;
+  position: relative;
+}
+
+.modal-action {
+  float: right;
 }
 
 .input-search {
@@ -37,29 +69,12 @@ $roboto-font-path: '../assets/';
   background-color: rgba(0, 160, 150, .2);
 }
 
-.artists {
-  -moz-column-count: 2;
-  -moz-column-gap: 20px;
-  -webkit-column-count: 2;
-  -webkit-column-gap: 20px;
-  column-count: 2;
-  column-gap: 20px;
-}
-
-.materialize-checkbox {
-  margin-top: -10px;
-}
-
-[type="checkbox"]:not(:checked), [type="checkbox"]:checked {
-  position: relative;
-}
-
 [type="checkbox"] + label {
   color: black;
 }
 
-.input-adjust {
-  margin-top: -5px;
+h6 {
+  font-size: 20px;
 }
 
 [data-ember-action] {

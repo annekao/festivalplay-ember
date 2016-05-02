@@ -1,31 +1,27 @@
 {{outlet}}
-
-
 <div id="home-container"></div>
 
-{{#md-btn
-    action='openModal'
-    buttonType='floating'
-    class='btn-large fixed-floating'}}
-    <i class="material-icons left">playlist_add</i>
-{{/md-btn}}
+<a class="btn-floating btn-large waves-effect waves-light" {{action 'openModal'}}>
+    <i class="material-icons">playlist_add</i>
+</a>
+
 
 {{#if isModalOpen}}
-    {{#md-modal close='closeModal'}}
+    {{#modal-dialog translucentOverlay=true container-class='modal modal-fixed-footer'}}
         {{#if step1}}
             <form {{action 'step2' on="submit"}}>
                 <div class="modal-content">
-                    <h4>Step 1: Search for an event by title</h4>
-                    <div class="input-field">
+                    <div class="modal-title teal lighten-3 white-text">Step 1: Search for an event by title</div>
+                    <div class="modal-body input-field">
                         <i class="material-icons input-search">search</i>
                         {{input value=search type="search" required=true}}
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="modal-action modal-close waves-effect waves-green btn-flat agree-button" type="submit">
+                    <button class="modal-action modal-close waves-effect waves-green btn-flat" type="submit">
                         Next
                     </button>
-                    <a class="modal-action modal-close waves-effect waves-red btn-flat cancel-button" {{action 'closeModal'}}>
+                    <a class="modal-action modal-close waves-effect waves-red btn-flat" {{action 'closeModal'}}>
                         Cancel
                     </a>
                 </div>
@@ -34,27 +30,33 @@
 
         {{#if step2}}
             <div class="modal-content">
-                <h4>Step 2: Select an event</h4>
-                {{#if eventResults}}
-                    {{#md-collection content=eventResults as |event index|}}
-                        <div class='collection-item avatar {{if event.selected 'active'}}' {{action 'selectEvent' event}}>
-                            <span class="title">{{event.title}}</span>
-                            <p>{{event.readableDate}}<br>{{event.location}}</p>
+                <div class="modal-title teal lighten-3 white-text">Step 2: Select an event</div>
+                <div class="modal-body">
+                    {{#if eventResults}}
+                        <ul class="collection">
+                            {{#each eventResults as |event|}}
+                                <li class='collection-item avatar {{if event.selected 'active'}}' {{action 'selectEvent' event}}>
+                                    <span class="title">{{event.title}}</span>
+                                    <p>{{event.readableDate}}<br>{{event.location}}</p>
+                                </li>
+                            {{/each}}
+                        </ul>
+                    {{else}}
+                        <div class="progress">
+                            <div class="indeterminate"></div>
                         </div>
-                    {{/md-collection}}
-                {{else}}
-                    {{md-loader}}
-                    If you've been waiting for a while, try being more specific with your search!
-                {{/if}}
+                        If you've been waiting for a while, try being more specific with your search!
+                    {{/if}}
+                </div>
             </div>
             <div class="modal-footer">
-                <a class="modal-action modal-close waves-effect waves-green btn-flat agree-button" {{action 'step3'}}>
+                <a class="modal-action modal-close waves-effect waves-green btn-flat" {{action 'step3'}}>
                     Next
                 </a>
-                <a class="modal-action modal-close waves-effect waves-blue btn-flat cancel-button" {{action 'step1'}}>
+                <a class="modal-action modal-close waves-effect waves-blue btn-flat" {{action 'step1'}}>
                     Back
                 </a>
-                <a class="modal-action modal-close waves-effect waves-red btn-flat cancel-button" {{action 'closeModal'}}>
+                <a class="modal-action modal-close waves-effect waves-red btn-flat" {{action 'closeModal'}}>
                     Cancel
                 </a>
             </div>
@@ -62,25 +64,32 @@
 
         {{#if step3}}
             <div class="modal-content">
-                <h4>Step 3: Select the artists</h4>
-                <div class="artists">
-                    {{#if artistResults}}
-                        {{md-checks
-                        selection=selectedArtists
-                        content=artistResults}}
-                    {{else}}
-                        {{md-loader}}
-                    {{/if}}
-                </div>
+                <div class="modal-title teal lighten-3 white-text">Step 3: Select the artists</div>
+                    <div class="modal-body">
+                        {{#if artistResults}}
+                            <div class="row">
+                                {{#each artistResults as |artist|}}
+                                    <p class="col s6">
+                                        {{input type="checkbox" id=artist.name checked=artist.checked}}
+                                        <label for="{{artist.name}}">{{artist.name}} {{artist.genre}}</label>
+                                    </p>
+                                {{/each}}
+                            </div>
+                        {{else}}
+                            <div class="progress">
+                                <div class="indeterminate"></div>
+                            </div>
+                        {{/if}}
+                    </div>
             </div>
             <div class="modal-footer">
-                <a class="modal-action modal-close waves-effect waves-green btn-flat agree-button" {{action 'step4'}}>
+                <a class="modal-action modal-close waves-effect waves-green btn-flat" {{action 'step4'}}>
                     Next
                 </a>
-                <a class="modal-action modal-close waves-effect waves-blue btn-flat cancel-button" {{action 'step2'}}>
+                <a class="modal-action modal-close waves-effect waves-blue btn-flat" {{action 'step2'}}>
                     Back
                 </a>
-                <a class="modal-action modal-close waves-effect waves-red btn-flat cancel-button" {{action 'closeModal'}}>
+                <a class="modal-action modal-close waves-effect waves-red btn-flat" {{action 'closeModal'}}>
                     Cancel
                 </a>
             </div>
@@ -89,22 +98,24 @@
         {{#if step4}}
             <form {{action 'createPlaylist' on="submit"}}>
                 <div class="modal-content">
-                    <h4>Step 4: Settings</h4>
-                    Playlist title:
-                    {{md-input class="col s12 input-adjust" value=playlistTitle validate=true required=true}}
-                    Number of songs per artist: {{range}}
-                    <p class="range-field">
-                        {{input value=range type="range" min="1" max="10" }}
-                    </p>
+                    <div class="modal-title teal lighten-3 white-text">Step 4: Settings</div>
+                    <div class="modal-body">
+                        <h6>Playlist title:</h6>
+                        {{input value=playlistTitle validate=true required=true}}
+                        <h6>Number of songs per artist: {{range}}</h6>
+                        <p class="range-field">
+                            {{input value=range type="range" min="1" max="10" }}
+                        </p>
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="modal-action modal-close waves-effect waves-green btn-flat agree-button" type="submit">
+                    <button class="modal-action modal-close waves-effect waves-green btn-flat" type="submit">
                         Create Playlist
                     </button>
-                    <a class="modal-action modal-close waves-effect waves-blue btn-flat cancel-button" {{action 'step3'}}>
+                    <a class="modal-action modal-close waves-effect waves-blue btn-flat" {{action 'step3'}}>
                         Back
                     </a>
-                    <a class="modal-action modal-close waves-effect waves-red btn-flat cancel-button" {{action 'closeModal'}}>
+                    <a class="modal-action modal-close waves-effect waves-red btn-flat" {{action 'closeModal'}}>
                         Cancel
                     </a>
                 </div>
@@ -113,7 +124,64 @@
 
         {{#if creating}}
             <div class="modal-content">
-                <h4>{{progress}}</h4>
+                <div class="modal-title teal lighten-3 white-text">{{progress}}</div>
+                <div class="modal-body">
+                    {{#if complete}}
+                        <h5>You can view your playlist on our home page or in your Spotify account!</h5><br>
+                    {{else}}
+                        <div class="progress">
+                            <div class="indeterminate"></div>
+                        </div>
+                    {{/if}}
+                    {{#each errorMessages as |error|}}
+                        {{error}}<br>
+                    {{/each}}
+                </div>
+            </div>
+            <div class="modal-footer">
+                {{#if complete}}
+                    <a class="modal-action modal-close waves-effect waves-red btn-flat" {{action 'closeModal'}}>
+                        Close
+                    </a>
+                {{/if}}
+            </div>
+        {{/if}}
+    {{/modal-dialog}}
+{{/if}}
+
+<!--
+{{#if isModalOpen}}
+
+
+
+        {{#if step4}}
+            <form {{action 'createPlaylist' on="submit"}}>
+                <div class="modal-content">
+                    <div class=modal-title teal lighten-3 white-text>Step 4: Settings</div>
+                    Playlist title:
+                    {{md-input class="col s12 input-adjust" value=playlistTitle validate=true required=true}}
+                    Number of songs per artist: {{range}}
+                    <p class="range-field">
+                        {{input value=range type="range" min="1" max="10" }}
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-action modal-close waves-effect waves-green btn-flat" type="submit">
+                        Create Playlist
+                    </button>
+                    <a class="modal-action modal-close waves-effect waves-blue btn-flat" {{action 'step3'}}>
+                        Back
+                    </a>
+                    <a class="modal-action modal-close waves-effect waves-red btn-flat" {{action 'closeModal'}}>
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        {{/if}}
+
+        {{#if creating}}
+            <div class="modal-content">
+                <div class=modal-title teal lighten-3 white-text>{{progress}}</div>
                 {{#if complete}}
                     <b>You can view your playlist on our home page or in your Spotify account!</b><br>
                 {{else}}
@@ -124,12 +192,12 @@
                 {{/each}}
                 {{#if complete}}
                     <div class="modal-footer">
-                        <a class="modal-action modal-close waves-effect waves-red btn-flat cancel-button" {{action 'closeModal'}}>
+                        <a class="modal-action modal-close waves-effect waves-red btn-flat" {{action 'closeModal'}}>
                             Close
                         </a>
                     </div>
                 {{/if}}
             </div>
         {{/if}}
-    {{/md-modal}}
 {{/if}}
+-->

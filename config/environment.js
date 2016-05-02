@@ -18,10 +18,6 @@ module.exports = function(environment) {
       // when it is created
     },
 
-    sassOptions: {
-      includePaths: ['bower_components/materialize/sass']
-    },
-
     SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
     SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI
   };

@@ -1,14 +1,17 @@
-{{#md-navbar name='FESTIVAL PLAY' class='navigation pink darken-4'}}
-    {{#if model}}
-        {{#link-to 'user' model.id tagname='li'}}
-            {{model.username}}
-            <img src='{{model.image_url}}' class='circle'>
-        {{/link-to}}
-    {{else}}
-        <li {{action 'login'}}>Login to Spotify</li>
-    {{/if}}
-{{/md-navbar}}
-{{outlet}}
+<nav class="pink darken-4">
+    <div class="nav-wrapper">
+        <a href="/" class="brand-logo">FESTIVAL PLAY</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            {{#if model}}
+                {{#link-to 'user' model.id tagname='li'}}
+                    {{model.username}}
+                    <img src='{{model.image_url}}' class='circle'>
+                {{/link-to}}
+            {{else}}
+                <li {{action 'login'}}>Login to Spotify</li>
+            {{/if}}
+        </ul>
+    </div>
+</nav>
 
-{{!-- ember-cli-materialize modal container --}}
-{{md-modal-container}}
+{{outlet}}

@@ -6,7 +6,6 @@ export default Ember.Controller.extend({
   eventResults: [],
   selectedEvent: '',
   artistResults: [],
-  selectedArtists: [],
   step1: true,
   step2: false,
   step3: false,
@@ -24,7 +23,7 @@ export default Ember.Controller.extend({
         alert("Your Spotify session has expired");
         this.transitionToRoute('index');
       } else {
-        this.set('isModalOpen', true);
+        this.toggleProperty('isModalOpen');
       }
     },
     
@@ -34,7 +33,6 @@ export default Ember.Controller.extend({
         this.set('eventResults', []);
         this.set('selectedEvent', '');
         this.set('artistResults', []);
-        this.set('selectedArtists', []);
         this.set('step1', true);
         this.set('step2', false);
         this.set('step3', false);
@@ -60,7 +58,6 @@ export default Ember.Controller.extend({
       this.set('step2', true);
       this.set('step1', false);
       this.set('step3', false);
-      this.set('selectedEvent', '');
       if(this.get('selectedEvent') === '') {
         $.getJSON(ENV.NODE_API+'api/v1/seatgeek/events?q='+this.get('search'))
           .then(function(response){
@@ -88,11 +85,14 @@ export default Ember.Controller.extend({
         this.set('step2', false);
         this.set('step4', false);
         this.set('artistResults', []);
-        this.set('selectedArtists', []);
 
         this.get('selectedEvent').artists.forEach(function(artist) {
-          this.get('artistResults').addObject(artist.name);
-          this.get('selectedArtists').addObject(artist.name);
+          var genre = '';
+          if (artist.genres) {
+            genre = ' (' + artist.genres[0].name + ')';
+          }
+
+          this.get('artistResults').addObject({name: artist.name, genre: genre, checked: true});
         }.bind(this));
       }
     },
@@ -114,13 +114,15 @@ export default Ember.Controller.extend({
 
       this.set('progress', 'Searching for artists in Spotify...');
 
-      this.get('selectedArtists').forEach(function(artist) {
-        promises.push($.getJSON(ENV.NODE_API+'api/v1/spotify/search?q='+encodeURIComponent(artist))
-          .then(function(response){
-            if (response.error) {
-              this.get('errorMessages').addObject(response.error);
-            }
-          }.bind(this)));
+      this.get('artistResults').forEach(function(artist) {
+        if (artist.checked) {
+          promises.push($.getJSON(ENV.NODE_API+'api/v1/spotify/search?q='+encodeURIComponent(artist.name))
+            .then(function(response){
+              if (response.error) {
+                this.get('errorMessages').addObject(response.error);
+              }
+            }.bind(this)));
+        }
       }.bind(this));
 
 
