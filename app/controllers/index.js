@@ -134,7 +134,6 @@ export default Ember.Controller.extend({
     createPlaylist() {
       this.set('creating', true);
       this.set('step4', false);
-      var promises = [];
       var playlistTitle = this.get('playlistTitle');
       var event = this.get('selectedEvent').title;
       var date =this.get('selectedEvent').date;
