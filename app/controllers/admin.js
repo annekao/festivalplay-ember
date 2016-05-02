@@ -17,7 +17,7 @@ export default Ember.Controller.extend({
     adminLogin() {
       Ember.$.getJSON(ENV.NODE_API + 'api/v1/admin?u='+this.get('username')+'&p='+this.get('password'))
         .then(function(response) {
-          if (response) {
+          if (response.success) {
             this.set('showLogin', false);
             Ember.$.getJSON(ENV.NODE_API+'api/v1/playlists')
               .then(function(response){

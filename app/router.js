@@ -6,7 +6,6 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-  this.route('user', { path: '/:user_id' });
   this.route('admin');
 });
 
