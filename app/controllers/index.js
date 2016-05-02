@@ -18,6 +18,7 @@ export default Ember.Controller.extend({
   step3: false,
   step4: false,
   playlistTitle: '',
+  range: 6,
   creating: false,
   progress: '',
   complete: false,
