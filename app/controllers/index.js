@@ -144,7 +144,11 @@ export default Ember.Controller.extend({
 
       this.get('artistResults').forEach(function(artist) {
         if (artist.checked) {
-          promises.push(Ember.$.getJSON(ENV.NODE_API+'api/v1/spotify/search?q='+encodeURIComponent(artist.name))
+          promises.push(Ember.$.ajax({
+            url: ENV.NODE_API+'api/v1/spotify/search?q='+encodeURIComponent(artist.name),
+            async: false,
+            method: "GET"
+          })
             .then(function(response){
               if (!response.success) {
                 this.set('error', response.error);
