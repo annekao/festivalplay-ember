@@ -1,9 +1,32 @@
 {{outlet}}
-<div id="home-container"></div>
+<div id="home-container">
+    <div class="row">
+        {{#each model as |playlist|}}
+            <div class="col l4 m6 s12">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="card-title">{{playlist.title}}</div>
+                        <iframe src="https://embed.spotify.com/?uri=spotify%3Auser%3A{{playlist.user.username}}%3Aplaylist%3A{{playlist.playlist_id}}&theme=white"
+                                width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
+                        <center><i><span class="title">{{playlist.event.title}}</span></i>
+                        <p>{{format-date playlist.event.date}}<br>{{playlist.event.location}}</p></center>
+                    </div>
+                    <div class="card-action">
+                        <iframe src="https://embed.spotify.com/follow/1/?uri=spotify:user:{{playlist.user.username}}&size=detail&theme=light"
+                                width="300" height="56" scrolling="no" frameborder="0" style="border:none; overflow:hidden;"
+                                allowtransparency="true"></iframe>
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+</div>
 
-<a class="btn-floating btn-large waves-effect waves-light" {{action 'openModal'}}>
-    <i class="material-icons">playlist_add</i>
-</a>
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large waves-effect waves-light" {{action 'openModal'}}>
+        <i class="material-icons">playlist_add</i>
+    </a>
+</div>
 
 
 {{#if isModalOpen}}
@@ -37,7 +60,7 @@
                             {{#each eventResults as |event|}}
                                 <li class='collection-item avatar {{if event.selected 'active'}}' {{action 'selectEvent' event}}>
                                     <span class="title">{{event.title}}</span>
-                                    <p>{{event.readableDate}}<br>{{event.location}}</p>
+                                    <p>{{format-date event.date}}<br>{{event.location}}</p>
                                 </li>
                             {{/each}}
                         </ul>
@@ -148,56 +171,3 @@
         {{/if}}
     {{/modal-dialog}}
 {{/if}}
-
-<!--
-{{#if isModalOpen}}
-
-
-
-        {{#if step4}}
-            <form {{action 'createPlaylist' on="submit"}}>
-                <div class="modal-content">
-                    <div class=modal-title teal lighten-3 white-text>Step 4: Settings</div>
-                    Playlist title:
-                    {{md-input class="col s12 input-adjust" value=playlistTitle validate=true required=true}}
-                    Number of songs per artist: {{range}}
-                    <p class="range-field">
-                        {{input value=range type="range" min="1" max="10" }}
-                    </p>
-                </div>
-                <div class="modal-footer">
-                    <button class="modal-action modal-close waves-effect waves-green btn-flat" type="submit">
-                        Create Playlist
-                    </button>
-                    <a class="modal-action modal-close waves-effect waves-blue btn-flat" {{action 'step3'}}>
-                        Back
-                    </a>
-                    <a class="modal-action modal-close waves-effect waves-red btn-flat" {{action 'closeModal'}}>
-                        Cancel
-                    </a>
-                </div>
-            </form>
-        {{/if}}
-
-        {{#if creating}}
-            <div class="modal-content">
-                <div class=modal-title teal lighten-3 white-text>{{progress}}</div>
-                {{#if complete}}
-                    <b>You can view your playlist on our home page or in your Spotify account!</b><br>
-                {{else}}
-                    {{md-loader}}
-                {{/if}}
-                {{#each errorMessages as |error|}}
-                    {{error}}<br>
-                {{/each}}
-                {{#if complete}}
-                    <div class="modal-footer">
-                        <a class="modal-action modal-close waves-effect waves-red btn-flat" {{action 'closeModal'}}>
-                            Close
-                        </a>
-                    </div>
-                {{/if}}
-            </div>
-        {{/if}}
-{{/if}}
--->

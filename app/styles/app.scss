@@ -1,9 +1,37 @@
 @import "ember-modal-dialog/ember-modal-structure";
 @import "ember-modal-dialog/ember-modal-appearance";
 
+body {
+  background-color: #ffccbc;
+}
+
 nav {
   padding-left: 50px;
   padding-right: 20px;
+}
+
+.card {
+  width: 340px;
+}
+
+.card-title {
+  line-height: 25px !important;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: 20px !important;
+  font-weight: bold !important;
+}
+
+.card-action {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+.card-action a {
+  text-transform: none !important;
+  color: black !important;
+
 }
 
 .circle {
@@ -11,12 +39,6 @@ nav {
   width: 40px;
   vertical-align: middle;
   margin-left: 10px;
-}
-
-.btn-floating {
-  position: absolute;
-  right: 35px;
-  bottom: 35px;
 }
 
 .modal {
