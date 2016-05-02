@@ -5,10 +5,10 @@
         <form {{action 'adminLogin' on="submit"}}>
             <h3 style="text-align:center">Admin Login</h3>
             Username:
-            {{input value=username validate=true required=true}}
+            {{input class='username' value=username validate=true required=true}}
             <br><br>
             Password:
-            {{input value=password type='password' validate=true required=true}}
+            {{input class='password' value=password type='password' validate=true required=true}}
             <button style="float:right;margin-top:10px" class="waves-effect waves-light btn-flat teal white-text" type="submit">SUBMIT</button>
         </form>
     </div>

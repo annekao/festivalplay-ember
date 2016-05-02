@@ -46,11 +46,11 @@
                 </div>
             {{else}}
                 <form {{action 'step2' on="submit"}}>
-                    <div class="modal-content">
-                        <div class="modal-title teal white-text">Step 1: Search for an event by title</div>
+                    <div id="step1" class="modal-content">
+                        <div class="modal-title teal white-text">{{step}}</div>
                         <div class="modal-body input-field">
                             <i class="material-icons input-search">search</i>
-                            {{input value=search type="search" required=true}}
+                            {{input class='search' value=search type="search" required=true}}
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -76,7 +76,7 @@
                 </div>
             {{else}}
                 <div class="modal-content">
-                    <div class="modal-title teal white-text">Step 2: Select an event</div>
+                    <div class="modal-title teal white-text">{{step}}</div>
                     <div class="modal-body">
                         {{#if eventResults}}
                             <ul class="collection">
@@ -124,7 +124,7 @@
                 </div>
             {{else}}
                 <div class="modal-content">
-                    <div class="modal-title teal white-text">Step 3: Select the artists</div>
+                    <div class="modal-title teal white-text">{{step}}</div>
                         <div class="modal-body">
                             {{#if artistResults}}
                                 <div class="row">
@@ -168,7 +168,7 @@
             {{else}}
                 <form {{action 'createPlaylist' on="submit"}}>
                     <div class="modal-content">
-                        <div class="modal-title teal white-text">Step 4: Settings</div>
+                        <div class="modal-title teal white-text">{{step}}</div>
                         <div class="modal-body">
                             <h6>Playlist title:</h6>
                             {{input value=playlistTitle validate=true required=true}}

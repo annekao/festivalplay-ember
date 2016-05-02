@@ -18,17 +18,23 @@ export default Ember.Controller.extend({
   step3: false,
   step4: false,
   playlistTitle: '',
-  range: 6,
   creating: false,
   progress: '',
   complete: false,
   errorMessages: [],
   error: undefined,
+  step: 'Step 1: Search for an event by title',
 
   actions: {
     openModal() {
+      /* testing purposes */
+      if (localStorage.getItem('acceptance-test')) {
+        this.toggleProperty('isModalOpen');
+        return;
+      }
+
       if ((new Date()).getTime() > localStorage.getItem('access_token_expires')) {
-        alert("Your Spotify session has expired");
+        alert("Your Spotify session has expired.");
         this.transitionToRoute('index');
       } else {
         this.toggleProperty('isModalOpen');
@@ -36,28 +42,29 @@ export default Ember.Controller.extend({
     },
     
     closeModal() {
-      if(this.get('complete') || this.get('error')) {
-        // reset form
-        this.set('eventResults', []);
-        this.set('eventResultsLength', false);
-        this.set('selectedEvent', '');
-        this.set('artistResults', []);
-        this.set('step1', true);
-        this.set('step2', false);
-        this.set('step3', false);
-        this.set('step4', false);
-        this.set('playlistTitle', '');
-        this.set('range', 6);
-        this.set('creating', false);
-        this.set('progress', '');
-        this.set('complete', false);
-        this.set('errorMessages', []);
-        this.set('error', undefined);
-      }
+      // reset form
+      this.set('eventResults', []);
+      this.set('eventResultsLength', false);
+      this.set('selectedEvent', '');
+      this.set('artistResults', []);
+      this.set('step1', true);
+      this.set('step2', false);
+      this.set('step3', false);
+      this.set('step4', false);
+      this.set('playlistTitle', '');
+      this.set('range', 6);
+      this.set('creating', false);
+      this.set('progress', '');
+      this.set('complete', false);
+      this.set('errorMessages', []);
+      this.set('error', undefined);
+      this.set('step', 'Step 1: Search for an event by title');
+      this.set('search', '');
       this.set('isModalOpen', false);
     },
 
     step1() {
+      this.set('step', 'Step 1: Search for an event by title');
       this.set('step1', true);
       this.set('step2', false);
       this.set('selectedEvent', '');
@@ -66,6 +73,7 @@ export default Ember.Controller.extend({
     },
 
     step2() {
+      this.set('step', 'Step 2: Select an event');
       this.set('step2', true);
       this.set('step1', false);
       this.set('step3', false);
@@ -73,12 +81,12 @@ export default Ember.Controller.extend({
        Ember.$.getJSON(ENV.NODE_API+'api/v1/seatgeek/events?q='+this.get('search'))
           .then(function(response){
             if (!response.success) {
-              this.set('error', response.error);
+              Ember.run(function(){ this.set('error', response.error); }.bind(this));
               return;
             } else if(response.events.length === 0) {
-              this.set('eventResultsLength', true);
+              Ember.run(function(){ this.set('eventResultsLength', true); }.bind(this));
             } else {
-              this.set('eventResults', response.events);
+              Ember.run(function(){ this.set('eventResults', response.events); }.bind(this));
             }
           }.bind(this));
       }
@@ -96,6 +104,7 @@ export default Ember.Controller.extend({
     },
 
     step3() {
+      this.set('step', 'Step 3: Select the artists');
       if (this.get('selectedEvent') === '') {
         alert('Select an event!');
       } else {
@@ -115,6 +124,7 @@ export default Ember.Controller.extend({
     },
 
     step4() {
+      this.set('step', 'Step 4: Settings');
       this.set('playlistTitle', this.get('selectedEvent').title);
       this.set('step4', true);
       this.set('step3', false);
