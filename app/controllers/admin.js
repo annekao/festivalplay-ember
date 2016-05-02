@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import ENV from "client/config/environment";
 
-$.ajaxSetup({
+Ember.$.ajaxSetup({
   xhrFields: {
     withCredentials: true
   }
@@ -15,11 +15,11 @@ export default Ember.Controller.extend({
 
   actions: {
     adminLogin() {
-      $.getJSON(ENV.NODE_API + 'api/v1/admin?u='+this.get('username')+'&p='+this.get('password'))
+      Ember.$.getJSON(ENV.NODE_API + 'api/v1/admin?u='+this.get('username')+'&p='+this.get('password'))
         .then(function(response) {
           if (response) {
             this.set('showLogin', false);
-            $.getJSON(ENV.NODE_API+'api/v1/playlists')
+            Ember.$.getJSON(ENV.NODE_API+'api/v1/playlists')
               .then(function(response){
                 if (!response.success) {
                   this.set('playlists', response);
@@ -27,7 +27,7 @@ export default Ember.Controller.extend({
                   this.set('playlists', response.playlists);
                 }
               }.bind(this));
-            $.getJSON(ENV.NODE_API+'api/v1/users')
+            Ember.$.getJSON(ENV.NODE_API+'api/v1/users')
               .then(function(response){
                 if (!response.success) {
                   this.set('users', response);
@@ -35,7 +35,7 @@ export default Ember.Controller.extend({
                   this.set('users', response.users);
                 }
               }.bind(this));
-            $.getJSON(ENV.NODE_API+'api/v1/events')
+            Ember.$.getJSON(ENV.NODE_API+'api/v1/events')
               .then(function(response){
                 if (!response.success) {
                   this.set('events', response);
@@ -50,7 +50,7 @@ export default Ember.Controller.extend({
     },
 
     deletePlaylist(playlist_id, index) {
-      $.ajax({
+      Ember.$.ajax({
           url: ENV.NODE_API+'api/v1/playlists/'+playlist_id,
           method: 'DELETE'
       }).then(function(response) {
@@ -65,7 +65,7 @@ export default Ember.Controller.extend({
     },
 
     deleteUser(user_id, index) {
-      $.ajax({
+      Ember.$.ajax({
         url: ENV.NODE_API+'api/v1/users/'+user_id,
         method: 'DELETE'
       }).then(function(response) {
@@ -73,7 +73,7 @@ export default Ember.Controller.extend({
           this.get('users')[index] = undefined;
           this.set('users', this.get('users').compact());
 
-          $.getJSON(ENV.NODE_API+'api/v1/playlists')
+          Ember.$.getJSON(ENV.NODE_API+'api/v1/playlists')
             .then(function(response){
               if (!response.success) {
                 this.set('playlists', response);
@@ -89,7 +89,7 @@ export default Ember.Controller.extend({
     },
 
     deleteEvent(event_id, index) {
-      $.ajax({
+      Ember.$.ajax({
         url: ENV.NODE_API+'api/v1/events/'+event_id,
         method: 'DELETE'
       }).then(function(response) {
@@ -97,7 +97,7 @@ export default Ember.Controller.extend({
           this.get('events')[index] = undefined;
           this.set('events', this.get('events').compact());
 
-          $.getJSON(ENV.NODE_API+'api/v1/playlists')
+          Ember.$.getJSON(ENV.NODE_API+'api/v1/playlists')
             .then(function(response){
               if (!response.success) {
                 this.set('playlists', response);

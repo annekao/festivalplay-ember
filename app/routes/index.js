@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import ENV from "client/config/environment";
 
-$.ajaxSetup({
+Ember.$.ajaxSetup({
   xhrFields: {
     withCredentials: true
   }
@@ -9,7 +9,7 @@ $.ajaxSetup({
 
 export default Ember.Route.extend({
   model() {
-    return $.get(ENV.NODE_API+'api/v1/playlists')
+    return Ember.$.get(ENV.NODE_API+'api/v1/playlists')
       .then(function(response){
         return response;
       });

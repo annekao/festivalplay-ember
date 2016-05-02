@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import ENV from "client/config/environment";
 
-$.ajaxSetup({
+Ember.$.ajaxSetup({
   xhrFields: {
     withCredentials: true
   }
@@ -70,12 +70,12 @@ export default Ember.Controller.extend({
       this.set('step1', false);
       this.set('step3', false);
       if(this.get('selectedEvent') === '') {
-        $.getJSON(ENV.NODE_API+'api/v1/seatgeek/events?q='+this.get('search'))
+       Ember.$.getJSON(ENV.NODE_API+'api/v1/seatgeek/events?q='+this.get('search'))
           .then(function(response){
             if (!response.success) {
               this.set('error', response.error);
               return;
-            } else if(response.events.length == 0) {
+            } else if(response.events.length === 0) {
               this.set('eventResultsLength', true);
             } else {
               this.set('eventResults', response.events);
@@ -92,7 +92,7 @@ export default Ember.Controller.extend({
         } else {
           Ember.set(event, 'selected', false);
         }
-      })
+      });
     },
 
     step3() {
@@ -109,7 +109,6 @@ export default Ember.Controller.extend({
           if (artist.genres) {
             genre = ' (' + artist.genres[0].name + ')';
           }
-
           this.get('artistResults').addObject({name: artist.name, genre: genre, checked: true});
         }.bind(this));
       }
@@ -134,7 +133,7 @@ export default Ember.Controller.extend({
 
       this.get('artistResults').forEach(function(artist) {
         if (artist.checked) {
-          promises.push($.getJSON(ENV.NODE_API+'api/v1/spotify/search?q='+encodeURIComponent(artist.name))
+          promises.push(Ember.$.getJSON(ENV.NODE_API+'api/v1/spotify/search?q='+encodeURIComponent(artist.name))
             .then(function(response){
               if (!response.success) {
                 this.set('error', response.error);
@@ -149,9 +148,9 @@ export default Ember.Controller.extend({
       }.bind(this));
 
 
-      Promise.all(promises).then(function() {
+      Ember.RSVP.Promise.all(promises).then(function() {
         this.set('progress', 'Finding the top ' + this.get('range') + ' tracks for each artist...');
-        $.getJSON(ENV.NODE_API+'api/v1/spotify/artists/top-tracks?tracks='+this.get('range'))
+       Ember.$.getJSON(ENV.NODE_API+'api/v1/spotify/artists/top-tracks?tracks='+this.get('range'))
           .then(function(response){
             if (!response.success) {
               this.set('error', response.error);
@@ -163,7 +162,7 @@ export default Ember.Controller.extend({
           }.bind(this))
           .then(function() {
             this.set('progress', 'Creating playlist \''+playlistTitle+'\'...');
-            $.post(ENV.NODE_API+'api/v1/spotify/users/playlists?title='+encodeURIComponent(playlistTitle)+
+           Ember.$.post(ENV.NODE_API+'api/v1/spotify/users/playlists?title='+encodeURIComponent(playlistTitle)+
                           '&event='+encodeURIComponent(event)+'&date='+encodeURIComponent(date)+'&location='+encodeURIComponent(location))
               .then(function(response2){
                 if (!response2.success) {
@@ -171,7 +170,7 @@ export default Ember.Controller.extend({
                   throw('Error');
                 }
                 this.set('progress', 'Adding tracks...');
-                $.post(ENV.NODE_API+'api/v1/spotify/users/playlists/tracks')
+               Ember.$.post(ENV.NODE_API+'api/v1/spotify/users/playlists/tracks')
                   .then(function(response3) {
                     if (!response3.success) {
                       this.set('error', response3.error);
