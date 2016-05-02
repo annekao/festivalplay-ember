@@ -20,3 +20,8 @@ install:
 
 script:
   - npm test
+
+deploy:
+  provider: heroku
+  api_key:
+    secure: process.ENV.HEROKU_API

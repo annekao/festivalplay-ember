@@ -1,0 +1,100 @@
+{{outlet}}
+
+{{#if showLogin}}
+    <div class="login">
+        <form {{action 'adminLogin' on="submit"}}>
+            <h3 style="text-align:center">Admin Login</h3>
+            Username:
+            {{input value=username validate=true required=false}}
+            <br><br>
+            Password:
+            {{input value=password type='password' validate=true required=false}}
+            <button style="float:right;margin-top:10px" class="waves-effect waves-light btn-flat teal white-text" type="submit">SUBMIT</button>
+        </form>
+    </div>
+{{else}}
+    <div class="admin-panel white">
+        <h3>Playlists</h3>
+        <table class="highlight">
+            <thead>
+            <tr>
+                <th data-field="p-delete"></th>
+                <th data-field="p-title">Title</th>
+                <th data-field="p-event">Event</th>
+                <th data-field="p-author">Created By</th>
+                <th data-field="p-link">Link</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {{#each playlists as |playlist index|}}
+                <tr>
+                    <td class="delete" {{action 'deletePlaylist' playlist.id index}}><i class="material-icons">delete</i></td>
+                    <td>{{playlist.title}}</td>
+                    <td>{{playlist.event.title}}</td>
+                    <td>{{playlist.user.username}}</td>
+                    <td><a href="{{playlist.playlist_url}}"><i class="material-icons">info_outline</i></a></td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+        {{#if playlists.error}}
+            <h5 class="red-text" style="text-align:center">Error!
+                {{playlists.error}} </h5>
+        {{/if}}
+        <h3>Users</h3>
+        <table class="highlight">
+            <thead>
+            <tr>
+                <th data-field="u-delete"></th>
+                <th data-field="u-name">Name</th>
+                <th data-field="u-count">Playlist Count</th>
+                <th data-field="u-link">Link</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {{#each users as |user index|}}
+                <tr>
+                    <td class="delete"><i class="material-icons" {{action 'deleteUser' user.id index}} >delete</i></td>
+                    <td>{{user.username}}<img src='{{user.image_url}}' class='circle' style="margin-left:10px"></td>
+                    <td>{{user.playlist_count}}</td>
+                    <td><a href="{{user.spotify_page}}"><i class="material-icons">info_outline</i></a></td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+        {{#if users.error}}
+            <h5 class="red-text" style="text-align:center">Error!
+                {{users.error}}</h5>
+        {{/if}}
+        <h3>Events</h3>
+        <table class="highlight">
+            <thead>
+            <tr>
+                <th data-field="e-delete"></th>
+                <th data-field="e-title">Title</th>
+                <th data-field="e-date">Date</th>
+                <th data-field="e-location">Location</th>
+                <th data-field="e-playlist_count">Playlist Count</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {{#each events as |event index|}}
+                <tr>
+                    <td><i class="material-icons" {{action 'deleteEvent' event.id index}}>delete</i></td>
+                    <td>{{event.title}}</td>
+                    <td>{{formatDate event.date}}</td>
+                    <td>{{event.location}}</td>
+                    <td>{{event.playlist_count}}</td>
+                </tr>
+            {{/each}}
+            </tbody>
+        </table>
+        {{#if events.error}}
+            <h5 class="red-text" style="text-align:center">Error!
+                {{events.error}}</h5>
+        {{/if}}
+    </div>
+{{/if}}
