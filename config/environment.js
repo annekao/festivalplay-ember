@@ -19,7 +19,8 @@ module.exports = function(environment) {
     },
 
     SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
-    SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI
+    SPOTIFY_REDIRECT_URI: process.env.SPOTIFY_REDIRECT_URI,
+    NODE_API: process.env.NODE_API
   };
 
   if (environment === 'development') {
