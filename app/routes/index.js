@@ -13,5 +13,10 @@ export default Ember.Route.extend({
       .then(function(response){
         return response;
       });
+  }, 
+  actions: {
+    updatePlaylists: function() {
+      this.refresh();
+    }
   }
 });

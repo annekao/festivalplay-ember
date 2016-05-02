@@ -139,33 +139,26 @@ export default Ember.Controller.extend({
       var event = this.get('selectedEvent').title;
       var date =this.get('selectedEvent').date;
       var location = this.get('selectedEvent').location;
-
       this.set('progress', 'Searching for artists in Spotify...');
 
-      this.get('artistResults').forEach(function(artist) {
-        if (artist.checked) {
-          promises.push(Ember.$.ajax({
-            url: ENV.NODE_API+'api/v1/spotify/search?q='+encodeURIComponent(artist.name),
-            async: false,
-            method: "GET"
-          })
-            .then(function(response){
-              if (!response.success) {
-                this.set('error', response.error);
-                return;
-              }
-
-              if (response.error) {
-                this.get('errorMessages').addObject(response.error);
-              }
-            }.bind(this)));
+      Ember.$.ajax({
+          url: ENV.NODE_API+'api/v1/spotify/search',
+          method: "GET",
+          data: {
+            artists: this.get('artistResults')
+          }
+      }).then(function(response) {
+        console.log("wowsers");
+        if (!response.success) {
+          this.set('error', response.error);
+          return;
         }
-      }.bind(this));
-
-
-      Ember.RSVP.Promise.all(promises).then(function() {
+        if (response.error) {
+          this.get('errorMessages').addObject(response.error);
+        }
         this.set('progress', 'Finding the top ' + this.get('range') + ' tracks for each artist...');
-       Ember.$.getJSON(ENV.NODE_API+'api/v1/spotify/artists/top-tracks?tracks='+this.get('range'))
+        
+        Ember.$.getJSON(ENV.NODE_API+'api/v1/spotify/artists/top-tracks?tracks='+this.get('range'))
           .then(function(response){
             if (!response.success) {
               this.set('error', response.error);
@@ -193,11 +186,11 @@ export default Ember.Controller.extend({
                     }
                     this.set('progress', 'Added '+response3.tracks_size+' tracks to playlist \''+playlistTitle+'\'');
                     this.set('complete', true);
+                    this.send('updatePlaylists');
                   }.bind(this));
               }.bind(this));
           }.bind(this));
       }.bind(this));
-
     }
   }
 });
