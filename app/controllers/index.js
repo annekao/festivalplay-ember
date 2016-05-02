@@ -154,7 +154,7 @@ export default Ember.Controller.extend({
           return;
         }
         if (response.error) {
-          this.get('errorMessages').addObject(response.error);
+          this.get('errorMessages').pushObjects(response.error.toArray());
         }
         this.set('progress', 'Finding the top ' + this.get('range') + ' tracks for each artist...');
         
