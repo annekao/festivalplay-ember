@@ -1,6 +1,12 @@
 import Ember from 'ember';
 import ENV from "client/config/environment";
 
+$.ajaxSetup({
+  xhrFields: {
+    withCredentials: true
+  }
+});
+
 function getHashParams() {
   var hashParams = {};
   var e, r = /([^&;=]+)=?([^&;]*)/g,

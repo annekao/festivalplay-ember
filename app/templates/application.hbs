@@ -3,7 +3,12 @@
         <a href="/" class="brand-logo">FESTIVAL PLAY</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
             {{#if model}}
-                <img src='{{model.image_url}}' class='circle'>
+                {{#if model.success}}
+                    <img src='{{model.user.image_url}}' class='circle'>
+                {{else}}
+                    <img src='/Spotify_Icon_RGB_White.png' class='circle'>
+                    <li {{action 'login'}}>Login to Spotify</li>
+                {{/if}}
             {{else}}
                 <img src='/Spotify_Icon_RGB_White.png' class='circle'>
                 <li {{action 'login'}}>Login to Spotify</li>

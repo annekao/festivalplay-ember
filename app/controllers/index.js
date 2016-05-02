@@ -1,9 +1,16 @@
 import Ember from 'ember';
 import ENV from "client/config/environment";
 
+$.ajaxSetup({
+  xhrFields: {
+    withCredentials: true
+  }
+});
+
 export default Ember.Controller.extend({
   isModalOpen: false,
   eventResults: [],
+  eventResultsLength: false,
   selectedEvent: '',
   artistResults: [],
   step1: true,
@@ -16,6 +23,7 @@ export default Ember.Controller.extend({
   progress: '',
   complete: false,
   errorMessages: [],
+  error: undefined,
 
   actions: {
     openModal() {
@@ -28,9 +36,10 @@ export default Ember.Controller.extend({
     },
     
     closeModal() {
-      if(this.get('complete')) {
+      if(this.get('complete') || this.get('error')) {
         // reset form
         this.set('eventResults', []);
+        this.set('eventResultsLength', false);
         this.set('selectedEvent', '');
         this.set('artistResults', []);
         this.set('step1', true);
@@ -43,6 +52,7 @@ export default Ember.Controller.extend({
         this.set('progress', '');
         this.set('complete', false);
         this.set('errorMessages', []);
+        this.set('error', undefined);
       }
       this.set('isModalOpen', false);
     },
@@ -52,6 +62,7 @@ export default Ember.Controller.extend({
       this.set('step2', false);
       this.set('selectedEvent', '');
       this.set('eventResults', '');
+      this.set('eventResultsLength', false);
     },
 
     step2() {
@@ -61,7 +72,14 @@ export default Ember.Controller.extend({
       if(this.get('selectedEvent') === '') {
         $.getJSON(ENV.NODE_API+'api/v1/seatgeek/events?q='+this.get('search'))
           .then(function(response){
-            this.set('eventResults', response);
+            if (!response.success) {
+              this.set('error', response.error);
+              return;
+            } else if(response.events.length == 0) {
+              this.set('eventResultsLength', true);
+            } else {
+              this.set('eventResults', response.events);
+            }
           }.bind(this));
       }
     },
@@ -118,6 +136,11 @@ export default Ember.Controller.extend({
         if (artist.checked) {
           promises.push($.getJSON(ENV.NODE_API+'api/v1/spotify/search?q='+encodeURIComponent(artist.name))
             .then(function(response){
+              if (!response.success) {
+                this.set('error', response.error);
+                return;
+              }
+
               if (response.error) {
                 this.get('errorMessages').addObject(response.error);
               }
@@ -130,6 +153,10 @@ export default Ember.Controller.extend({
         this.set('progress', 'Finding the top ' + this.get('range') + ' tracks for each artist...');
         $.getJSON(ENV.NODE_API+'api/v1/spotify/artists/top-tracks?tracks='+this.get('range'))
           .then(function(response){
+            if (!response.success) {
+              this.set('error', response.error);
+              throw('Error');
+            }
             if (response.error.length > 0) {
               this.get('errorMessages').pushObjects(response.error.toArray());
             }
@@ -139,9 +166,17 @@ export default Ember.Controller.extend({
             $.post(ENV.NODE_API+'api/v1/spotify/users/playlists?title='+encodeURIComponent(playlistTitle)+
                           '&event='+encodeURIComponent(event)+'&date='+encodeURIComponent(date)+'&location='+encodeURIComponent(location))
               .then(function(response2){
+                if (!response2.success) {
+                  this.set('error', response2.error);
+                  throw('Error');
+                }
                 this.set('progress', 'Adding tracks...');
-                $.post(ENV.NODE_API+'api/v1/spotify/users/playlists/tracks?playlist_id='+response2.playlist_id)
+                $.post(ENV.NODE_API+'api/v1/spotify/users/playlists/tracks')
                   .then(function(response3) {
+                    if (!response3.success) {
+                      this.set('error', response3.error);
+                      throw('Error');
+                    }
                     this.set('progress', 'Added '+response3.tracks_size+' tracks to playlist \''+playlistTitle+'\'');
                     this.set('complete', true);
                   }.bind(this));

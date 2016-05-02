@@ -2,7 +2,7 @@
 @import "ember-modal-dialog/ember-modal-appearance";
 
 body {
-  background-color: #ffccbc;
+  background-color: #fce4ec;
 }
 
 nav {
@@ -101,4 +101,26 @@ h6 {
 
 [data-ember-action] {
   cursor: pointer;
+}
+
+.login {
+  margin: auto;
+  margin-top: 50px;
+  width: 350px;
+  height: 355px;
+  background-color: white;
+  padding: 20px;
+  padding-top: 15px;
+}
+
+.admin-panel {
+  padding: 20px;
+  margin: auto;
+  width: 90%;
+  height: 100%;
+}
+
+td {
+  max-width: 200px;
+  padding-right: 15px;
 }
